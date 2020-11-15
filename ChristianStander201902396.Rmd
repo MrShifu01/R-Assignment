@@ -149,7 +149,6 @@ df <- cbind(x, y)
 ```{r}
 library(tidyverse)
 df <- as.data.frame(df)
-print(df)
 ```
 
 ### 3.2.3. Write a code using tidyverse to compute a number of males ("M") and females ("F") in 3.2.1
@@ -170,7 +169,15 @@ df %>% group_by (y) %>% count() %>%
 ```{r}
 library(dplyr)
 
-df <- df %>% mutate(sumof = ifelse(y == "F", sum(x), sum(x)))
-print(df)
+df <- df %>% mutate(onlym = ifelse(y == "M", x, 0))
+df <- df %>% mutate(onlyf = ifelse(y == "F", x, 0))
+df$onlym <- as.double(df$onlym)
+df$onlyf <- as.double(df$onlyf)
+df <- df %>% mutate(sumofxperm = sum(onlym))
+df <- df %>% mutate(sumofxperf = sum(onlyf))
+df <- df %>% mutate(sumofall = sumofxperm + sumofxperf)
+  ggplot(data = df)+
+    geom_col(mapping = aes(x=y, y=sumofall, fill = y))
+  
 ```
 
